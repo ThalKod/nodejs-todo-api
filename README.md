@@ -1,3 +1,3 @@
-= Todolist Application
+# Todolist API
 
 Example NodeJS Todo API appplication
