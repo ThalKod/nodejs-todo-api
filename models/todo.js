@@ -3,10 +3,12 @@ const mongoose = require("mongoose");
 module.exports = mongoose.model("Todo", {
     text: {
         type: String,
-        minlength: 1
+        minlength: 1,
+        required: true
     },
     completed: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     completedAt: {
         type: Date,
