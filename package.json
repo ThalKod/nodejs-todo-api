@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/**/*.test.js",
+    "test-watch": "nodemon --exec \"npm test\" "
   },
   "author": "Thal Marcelin",
   "license": "ISC",
