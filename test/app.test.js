@@ -7,7 +7,7 @@ const Todo    = require("../models/todo");
 var dbcount;
 beforeEach((finish) =>{
     Todo.find({}).then((todo) => {
-        dbcount = todo.length 
+        dbcount = todo.length; 
         finish();
     });
 });
@@ -55,4 +55,16 @@ describe("POST /todos", () =>{
                 });
             });
     });
+});
+
+describe("GET /todos", () =>{
+    it("Should return all todos", (finish) =>{
+        request(app)
+            .get("/todos")
+            .expect(200)
+            .expect((res) =>{
+                expect(res.body.todos).toExist();
+            })
+            .end(finish);
+    })
 });
