@@ -4,9 +4,13 @@ const request = require("supertest");
 const {app}   = require("../app");
 const Todo    = require("../models/todo");
 
-// beforeEach((finish) =>{
-//     Todo.remove({}).then(() => finish());
-// });
+var dbcount;
+beforeEach((finish) =>{
+    Todo.find({}).then((todo) => {
+        dbcount = todo.length 
+        finish();
+    });
+});
 
 describe("POST /todos", () =>{
     it("Should create a new Todo", (finish) =>{
@@ -28,6 +32,27 @@ describe("POST /todos", () =>{
                     expect(res.body._id).toEqual(todo._id);
                     finish();
                 }).catch((err) => finish(err));
+            });
+    });
+
+    it("Should not create a new Todo Documents", (finish) =>{
+         var text = "";
+
+         request(app)
+            .post("/todos")
+            .send({text})
+            .expect(400)
+            .end((err, res) =>{
+                if(err){
+                    return finish(err);
+                }
+
+                Todo.find().then((todo) =>{
+                    expect(todo.length).toBe(dbcount);
+                    finish();
+                }).catch((err) =>{
+                    finish(err);
+                });
             });
     });
 });
