@@ -9,6 +9,11 @@ var app = express();
 
 app.use(bodyParser.json());
 
+
+app.get("/", (req, res) =>{
+    res.redirect("/todos");
+});
+
 app.post("/todos", (req, res) =>{
     var todo = new Todo({
         text: req.body.text
@@ -16,6 +21,14 @@ app.post("/todos", (req, res) =>{
 
     todo.save().then((rTodo) =>{
         res.send(rTodo);
+    }, (err) =>{
+        res.status(400).send(err);
+    });
+});
+
+app.get("/todos", (req, res) =>{
+    Todo.find().then((rTodos) =>{
+        res.send({todos: rTodos});
     }, (err) =>{
         res.status(400).send(err);
     });
