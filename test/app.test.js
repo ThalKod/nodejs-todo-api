@@ -25,7 +25,7 @@ describe("POST /todos", () =>{
                 }
 
                 Todo.findById(res.body._id).then((todo) =>{
-                    expect(todo._id).toEqual(todo._id);
+                    expect(res.body._id).toEqual(todo._id);
                     finish();
                 }).catch((err) => finish(err));
             });
