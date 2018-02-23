@@ -5,12 +5,15 @@ const {app}   = require("../app");
 const Todo    = require("../models/todo");
 
 var dbcount;
+var testTodo;
 beforeEach((finish) =>{
     Todo.find({}).then((todo) => {
         dbcount = todo.length; 
+        testTodo = todo[0];
         finish();
     });
 });
+
 
 describe("POST /todos", () =>{
     it("Should create a new Todo", (finish) =>{
@@ -66,5 +69,33 @@ describe("GET /todos", () =>{
                 expect(res.body.todos).toExist();
             })
             .end(finish);
-    })
+    });
+});
+
+
+describe("GET /todos/:id", () =>{
+    it("Should return todo", (finish) =>{
+        request(app)
+            .get("/todos/"+testTodo._id.toHexString())
+            .expect(200)
+            .expect((res) =>{
+                //console.log(testTodo._id.toHexString())
+                expect(res.body.rTodo.text).toBe(testTodo.text);
+            })
+            .end(finish);
+    });
+
+    it("Should return 404 if not found todo", (finish) =>{
+        request(app)
+            .get("/todos/5a8dea2a7ec80208f48e09b7")
+            .expect(404)
+            .end(finish)
+    });
+
+    it("Should return 404 if not a Object ID", (finish) =>{
+        request(app)
+            .get("/todos/23242")
+            .expect(404)
+            .end(finish)
+    });
 });

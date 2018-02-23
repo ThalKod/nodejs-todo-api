@@ -44,11 +44,10 @@ app.get("/todos/:id", (req, res) =>{
 
     Todo.findById(req.params.id).then((rTodo) =>{
         if(!rTodo){
-            return res.status(400).send();
+            return res.status(404).send();
         }
         res.send({rTodo});
     }).catch((err) =>{
-        console.log(err);
         res.status(404).send();
     });
 
