@@ -24,15 +24,15 @@ describe("POST /todos", () =>{
             .send({text})   
             .expect(200)
             .expect((res) =>{
-                expect(res.body.text).toBe(text);
+                expect(res.body.rTodo.text).toBe(text);
             })
             .end((err, res) =>{
                 if(err){
                    return finish(err);
                 }
 
-                Todo.findById(res.body._id).then((todo) =>{
-                    expect(res.body._id).toEqual(todo._id);
+                Todo.findById(res.body.rTodo._id).then((todo) =>{
+                    expect(res.body.rTodo._id).toEqual(todo._id);
                     finish();
                 }).catch((err) => finish(err));
             });
@@ -99,3 +99,30 @@ describe("GET /todos/:id", () =>{
             .end(finish)
     });
 });
+
+describe("DELETE /todos/:id", () =>{
+    it("Should remove and return the deleted Todo", (finish) =>{
+        request(app)
+            .delete("/todos/"+testTodo._id.toHexString())
+            .expect(200)
+            .expect((res) =>{
+                expect(res.body.rTodo._id).toBe(testTodo._id.toHexString());
+            })
+            .end(finish)
+    });
+
+    it("Should return 404 if not a correct Object ID", (finish) =>{
+        request(app)
+            .delete("/todos/3838339390hdh2")
+            .expect(404)
+            .end(finish)
+    });
+
+    it("Should return 404 if not find the ID", (finish) =>{
+        request(app)
+            .delete("/todos/5a8f549f8abe95130a408809")
+            .expect(404)
+            .end(finish)
+    });
+});
+

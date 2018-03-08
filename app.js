@@ -17,11 +17,12 @@ app.get("/", (req, res) =>{
 
 app.post("/todos", (req, res) =>{
     var todo = new Todo({
+        completed: req.body.completed,
         text: req.body.text
     });
 
     todo.save().then((rTodo) =>{
-        res.send(rTodo);
+        res.send({rTodo});
     }, (err) =>{
         res.status(400).send(err);
     });
@@ -63,7 +64,7 @@ app.delete("/todos/:id", (req, res) =>{
         if(!rTodo){
             return res.status(404).send();
         }
-        res.send(rTodo);
+        res.status(200).send({rTodo});
     }).catch((err) =>{
         res.status(404).send();
     });
