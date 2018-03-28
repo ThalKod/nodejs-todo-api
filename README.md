@@ -1,4 +1,4 @@
 # Todolist API
 
-Example NodeJS Todo API appplication
+NodeJS Todo API appplication
 
