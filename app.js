@@ -22,9 +22,10 @@ app.post("/todos", (req, res) =>{
         text: req.body.text
     });
 
-    todo.save().then((rTodo) =>{
+    Todo.create(todo).then((rTodo) =>{
         res.send({rTodo});
-    }, (err) =>{
+    })
+    .catch((err) =>{
         res.status(400).send(err);
     });
 });
@@ -73,6 +74,7 @@ app.delete("/todos/:id", (req, res) =>{
 
 
 app.patch("/todos/:id", (req, res) =>{
+
     var id = req.params.id;
     var body = _.pick(req.body, ["text", "completed"]);
 
@@ -100,6 +102,17 @@ app.patch("/todos/:id", (req, res) =>{
 
 });
 
+app.post("/users", (req, res) =>{
+
+    var body = _.pick(req.body, ["email", "password"]);
+
+    User.create(body).then((rUser) =>{
+        res.status(200).send({rUser});
+    })
+    .catch((err) =>{
+        res.status(400).send(err);
+    });
+});
 
 app.listen("3000", () =>{
     console.log("Server Started");
