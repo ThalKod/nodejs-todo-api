@@ -105,13 +105,27 @@ app.patch("/todos/:id", (req, res) =>{
 app.post("/users", (req, res) =>{
 
     var body = _.pick(req.body, ["email", "password"]);
+    var user = new User(body);
 
-    User.create(body).then((rUser) =>{
-        res.status(200).send({rUser});
+    user.save().then(() =>{
+        return user.generateAuthToken();
+    }).then((token) =>{
+        res.header('x-auth', token).send(user);
     })
-    .catch((err) =>{
-        res.status(400).send(err);
+    .catch((e) =>{
+        res.status(400).send(e);
     });
+
+    // User.create(body).then((rUser) =>{
+    //    return User.generateAuthToken();
+    //     //res.status(200).send({rUser});
+    // })
+    // .then((token) =>{
+    //     res.header("x-auth",token).send({rUser});
+    // })
+    // .catch((err) =>{
+    //     res.status(400).send(err);
+    // });
 });
 
 app.listen("3000", () =>{
