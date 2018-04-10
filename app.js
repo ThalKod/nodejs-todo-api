@@ -6,6 +6,7 @@ const {ObjectID} = require("mongodb");
 const {mongoose} = require("./db/db");
 const {User} = require("./models/user");
 const Todo   = require("./models/todo");
+const bcrypt    = require("bcryptjs");
 
 var {authenticate}  = require("./middleware/authenticate");
 
@@ -134,6 +135,32 @@ app.post("/users", (req, res) =>{
 
 app.get("/users/me", authenticate ,(req, res) =>{
     res.send(req.user);
+});
+
+
+app.post("/users/login", (req, res) =>{
+
+    User.findByCredentials(req.body.email, req.body.password).then((rUser) =>{
+        return rUser.generateAuthToken().then((token) =>{
+            res.header('x-auth', token).send(rUser);
+        });
+    }).catch((e) =>{
+        res.status(400).send();
+    });
+
+    // User.findOne({email: req.body.email}).then((rUser) =>{
+    //     bcrypt.compare(req.body.password, rUser.password, (err, result) =>{
+    //         if(result){
+    //             res.send(rUser);
+    //         }else{
+    //             res.send("Wrong password");
+    //         }
+    //     });
+    // })
+    // .catch((e)=>{
+    //     res.send("No User");
+    // })
+
 });
 
 app.listen("3000", () =>{
