@@ -75,7 +75,7 @@ describe("GET /todos", () =>{
     });
 });
 
-
+//TODO: Update the test
 describe("GET /todos/:id", () =>{
     it("Should return todo", (finish) =>{
         request(app)
