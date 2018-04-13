@@ -19,10 +19,11 @@ app.get("/", (req, res) =>{
     res.redirect("/todos");
 });
 
-app.post("/todos", (req, res) =>{
+app.post("/todos", authenticate,(req, res) =>{
     var todo = new Todo({
         completed: req.body.completed,
-        text: req.body.text
+        text: req.body.text,
+        _creator: req.user.id
     });
 
     Todo.create(todo).then((rTodo) =>{
@@ -33,8 +34,8 @@ app.post("/todos", (req, res) =>{
     });
 });
 
-app.get("/todos", (req, res) =>{
-    Todo.find().then((rTodos) =>{
+app.get("/todos", authenticate, (req, res) =>{
+    Todo.find({_creator: req.user._id}).then((rTodos) =>{
         res.send({todos: rTodos});
     }, (err) =>{
         res.status(400).send(err);
